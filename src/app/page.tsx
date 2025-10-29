@@ -1,7 +1,7 @@
-import { SimpleCard } from "@/components/SimpleCard"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { AddExpenseModal } from "../components/AddExpenseModal"
+import { AddExpenseModal } from "../features/ExpenseForm/container/AddExpenseModal"
+import { SimpleCardsList } from "@/features/Card/container/SimpleCardsList"
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           </DialogContent>
         </Dialog>
       </div>
-      <SimpleCard />
+      <SimpleCardsList />
     </div>
   )
 }

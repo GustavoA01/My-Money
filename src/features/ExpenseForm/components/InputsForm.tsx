@@ -1,0 +1,36 @@
+import { Input } from "@/components/ui/input"
+import { ErrorMessage } from "./ErrorMessage"
+import { FieldErrors, UseFormRegister } from "react-hook-form"
+import { FormExpenseType } from "@/data/schemas"
+
+type InputsProps = {
+  register: UseFormRegister<FormExpenseType>
+  errors: FieldErrors<FormExpenseType>
+}
+
+export const InputsForm = ({ register, errors }: InputsProps) => {
+  return (
+    <>
+      <label className="text-sm">Descrição</label>
+      <Input
+        className="mt-1"
+        type="text"
+        placeholder="Ex: Supermercado"
+        {...register("description")}
+      />
+      <ErrorMessage message={errors?.description?.message} />
+
+      <label className="text-sm">Valor</label>
+      <Input
+        className="mt-1"
+        type="number"
+        placeholder="Ex: 100"
+        {...register("value", {
+          setValueAs: (value: string) => parseFloat(value),
+        })}
+      />
+      <ErrorMessage message={errors?.value?.message} />
+
+    </>
+  )
+}

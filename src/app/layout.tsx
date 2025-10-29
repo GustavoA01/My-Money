@@ -1,9 +1,8 @@
 import type { Metadata } from "next"
 import { Roboto, Montserrat } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "../components/theme-provider"
 import { Header } from "../components/Header"
-import { Toaster } from "@/components/ui/sonner"
+import { Providers } from "@/components/Providers"
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -27,19 +26,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${montserrat.variable} dark ${roboto.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body
+        className={`${montserrat.variable} dark ${roboto.className} antialiased`}
+      >
+        <Providers>
           <div className="p-8">
             <Header />
             {children}
           </div>
-          <Toaster/>
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   )

@@ -1,10 +1,9 @@
 import z from "zod"
 
-export const receiptSchema = z.object({
+export const ExpenseSchema = z.object({
   description: z.string().min(1, { message: "A descrição é obrigatória" }),
-  value: z.string().min(1, {message: "O valor é obrigatório"}),
+  value: z.number().min(1, {message: "O valor é obrigatório"}),
   category: z.string(),
-  date: z.string().optional(),
 })
 
-export type FormReceiptType = z.infer<typeof receiptSchema>
+export type FormExpenseType = z.infer<typeof ExpenseSchema>
