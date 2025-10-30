@@ -1,5 +1,5 @@
 import { addNewExpenseType, ExpenseContextType, ExpenseType } from "@/data/types"
-import { addExpense, getExpenses } from "@/services/firestore"
+import { addExpense, deleteExpense, getExpenses } from "@/services/firestore"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Timestamp } from "firebase/firestore"
 import { createContext, useContext, useState } from "react"
@@ -21,11 +21,22 @@ export const ExpenseProvider = ({children}:{children: React.ReactNode}) => {
     mutationKey: ["expensesList"],
     mutationFn: addExpense,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["expensesList", "recentExpenses"] })
+      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
+      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
       setIsOpen(false)
       toast.success("Despesa criada com sucesso!")
     },
     onError: () => toast.error("Ocorreu um erro ao adicionar essa despesa"),
+  })
+  
+  const { mutateAsync: deleteExpenseFn } = useMutation({
+    mutationFn: deleteExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
+      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
+      toast.success("Despesa deletada com sucesso!")
+    },
+    onError: () => toast.error("Ocorreu um erro ao deletar essa despesa"),
   })
 
   const handleSetFilter = (value: string | undefined) => {
@@ -55,12 +66,13 @@ export const ExpenseProvider = ({children}:{children: React.ReactNode}) => {
   }
 
   const value = {
-    addNewExpense,
     expensesList,
-    isOpen,
-    setIsOpen,
+    addNewExpense,
+    deleteExpenseFn,
     handleSetFilter,
     filter,
+    isOpen,
+    setIsOpen,
   }
 
   return <ExpenseContext.Provider value={value}>{children}</ExpenseContext.Provider>

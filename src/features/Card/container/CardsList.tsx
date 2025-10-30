@@ -19,6 +19,7 @@ export const CardsList = () => {
             return (
               <ExpenseCard
                 key={expense.id}
+                id={expense.id}
                 description={expense.description}
                 value={expense.value}
                 category={category}

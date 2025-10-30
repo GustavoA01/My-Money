@@ -4,6 +4,7 @@ import { MenuActions } from "./MenuActions"
 import { CardInfo } from "./CardInfo"
 
 type ExpenseCardProps = {
+  id: string
   description: string
   value: number
   category: string
@@ -11,16 +12,17 @@ type ExpenseCardProps = {
 }
 
 export const ExpenseCard = ({
+  id,
   description,
   value,
   category,
   date,
 }: ExpenseCardProps) => {
   return (
-    <Card className="w-70 max-h-37">
+    <Card className="min-w-70 max-h-37">
       <CardHeader className="flex justify-between">
         <CardTitle>{description}</CardTitle>
-        <MenuActions />
+        <MenuActions id={id}/>
       </CardHeader>
 
       <CardInfo category={category} value={value} date={date} />

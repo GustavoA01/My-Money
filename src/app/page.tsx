@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { AddExpenseModal } from "../features/ExpenseForm/container/AddExpenseModal"
+import { AddExpenseModal } from "../features/ExpenseForm/container/ExpenseFormModal"
 import { SimpleCardsList } from "@/features/Card/container/SimpleCardsList"
 
 export default function Home() {

@@ -1,14 +1,14 @@
 import { Input } from "@/components/ui/input"
 import { ErrorMessage } from "./ErrorMessage"
-import { FieldErrors, UseFormRegister } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { FormExpenseType } from "@/data/schemas"
 
-type InputsProps = {
-  register: UseFormRegister<FormExpenseType>
-  errors: FieldErrors<FormExpenseType>
-}
+export const InputsForm = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormExpenseType>()
 
-export const InputsForm = ({ register, errors }: InputsProps) => {
   return (
     <>
       <label className="text-sm">Descrição</label>
@@ -30,7 +30,6 @@ export const InputsForm = ({ register, errors }: InputsProps) => {
         })}
       />
       <ErrorMessage message={errors?.value?.message} />
-
     </>
   )
 }

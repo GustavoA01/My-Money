@@ -13,13 +13,12 @@ type SelectProps = {
   name: string
   value: string | undefined
   onValueChange: (value: string) => void
-  defaultValue: string | undefined
 }
 
-export const SelectCategory = ({ name, value, onValueChange, defaultValue }: SelectProps) => (
+export const SelectCategory = ({ name, value, onValueChange }: SelectProps) => (
   <Select name={name} value={value} onValueChange={onValueChange}>
     <SelectTrigger>
-      <SelectValue defaultValue={defaultValue} placeholder={defaultValue === "6" ? "Outro" : "Selecione uma categoria"} />
+      <SelectValue placeholder={value === "6" ? "Outro" : "Selecione uma categoria"} />
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
@@ -29,7 +28,7 @@ export const SelectCategory = ({ name, value, onValueChange, defaultValue }: Sel
             {category}
           </SelectItem>
         ))}
-        {defaultValue !== "6" && (
+        {value !== "6" && (
           <SelectItem key="undefined" value={"all"}>
             Todas
           </SelectItem>

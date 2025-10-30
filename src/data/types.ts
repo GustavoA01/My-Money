@@ -25,10 +25,11 @@ export type addNewExpenseType = {
 }
 
 export type ExpenseContextType = {
-  addNewExpense: ({ data, date }: addNewExpenseType) => void
   expensesList: ExpenseType[] | undefined
+  addNewExpense: ({ data, date }: addNewExpenseType) => void
+  deleteExpenseFn: (id:string) => void
+  filter: string | undefined
+  handleSetFilter: (value: string | undefined) => void
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  handleSetFilter: (value: string | undefined) => void
-  filter: string | undefined
 }
