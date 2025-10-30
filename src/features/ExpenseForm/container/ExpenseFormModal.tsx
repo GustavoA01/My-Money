@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export const ExpenseFormModal = ({ id }: { id?: string }) => {
   const isEditing = !!id
-  const { addNewExpense } = useExpenseProvider()
+  const { formatExpense, addExpenseFn } = useExpenseProvider()
   const [date, setDate] = useState<Date | undefined>(undefined)
 
   const methods = useForm<FormExpenseType>({
@@ -42,10 +42,14 @@ export const ExpenseFormModal = ({ id }: { id?: string }) => {
   }, [expenseToEdit, id, reset])
 
   const handleAddExpense = (data: Omit<FormExpenseType, "date">) => {
-    addNewExpense({ data, date })
+    const newExpense = formatExpense({ data, date })
+    addExpenseFn(newExpense)
   }
 
-  const handleEditExpense = (data: Omit<FormExpenseType, "date">) => {}
+  const handleEditExpense = (data: Omit<FormExpenseType, "date">) => {
+    const expenseToEdit = formatExpense({ data, date })
+    console.log(expenseToEdit)
+  }
 
   return (
     <>

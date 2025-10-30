@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { ExpenseFormModal } from "./ExpenseFormModal"
 import { useExpenseProvider } from "@/contexts/ExpenseProvider"
 
-
 export const AddButton = () => {
   const { isOpen, setIsOpen } = useExpenseProvider()
   

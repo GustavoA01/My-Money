@@ -7,12 +7,14 @@ import {
   getDocs,
   query,
   QueryConstraint,
+  updateDoc,
   where,
 } from "firebase/firestore"
 import { db } from "./firebaseConfig"
 import { ExpenseType } from "@/data/types"
 
-const listCollectionRef = collection(db, "expensesList")
+const collectionName = "expensesList"
+const listCollectionRef = collection(db, collectionName)
 
 export const addExpense = async (data: Omit<ExpenseType, "id">) => {
   try {
@@ -44,23 +46,32 @@ export const getExpenses = async (
   return expenses
 }
 
+export const getExpenseById = async (id: string): Promise<ExpenseType> => {
+  const docRef = doc(db, collectionName, id)
+  const snapShot = await getDoc(docRef)
+
+  const expense = {
+    ...snapShot.data(),
+    id: snapShot.id,
+  } as ExpenseType
+
+  return expense
+}
+
+export const editExpense = async (id: string, data: ExpenseType) => {
+  try {
+    const docRef = doc(db, collectionName, id)
+    await updateDoc(docRef, data)
+  } catch (error) {
+    console.error("Ocorreu um erro ao editar a despesa", error)
+  }
+}
+
 export const deleteExpense = async (id: string) => {
   try {
-    await deleteDoc(doc(db, "expensesList", id))
+    await deleteDoc(doc(db, collectionName, id))
   } catch (error) {
     console.error("Ocorreu um erro ao deletar a despesa: ", error)
     throw new Error()
   }
-}
-
-export const getExpenseById = async (id: string): Promise<ExpenseType> => {
-  const docRef = doc(db, "expensesList", id)
-  const snapShot = await getDoc(docRef)
-  
-  const expense = {
-    ...snapShot.data(),
-    id: snapShot.id
-  } as ExpenseType
-
-  return expense
 }

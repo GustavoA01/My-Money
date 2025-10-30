@@ -1,5 +1,14 @@
-import { addNewExpenseType, ExpenseContextType, ExpenseType } from "@/data/types"
-import { addExpense, deleteExpense, getExpenses } from "@/services/firestore"
+import {
+  ExpenseContextType,
+  ExpenseType,
+  FormatExpenseType,
+} from "@/data/types"
+import {
+  addExpense,
+  deleteExpense,
+  editExpense,
+  getExpenses,
+} from "@/services/firestore"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Timestamp } from "firebase/firestore"
 import { createContext, useContext, useState } from "react"
@@ -7,14 +16,19 @@ import { toast } from "sonner"
 
 const ExpenseContext = createContext({} as ExpenseContextType)
 
-export const ExpenseProvider = ({children}:{children: React.ReactNode}) => {
+export const ExpenseProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
   const queryClient = useQueryClient()
   const [filter, setFilter] = useState<string | undefined>(undefined)
   const [isOpen, setIsOpen] = useState(false)
 
   const { data: expensesList } = useQuery({
     queryKey: ["expensesList", filter],
-    queryFn: () => getExpenses(filter !== undefined ? Number(filter): undefined),
+    queryFn: () =>
+      getExpenses(filter !== undefined ? Number(filter) : undefined),
   })
 
   const { mutateAsync: addExpenseFn } = useMutation({
@@ -28,26 +42,35 @@ export const ExpenseProvider = ({children}:{children: React.ReactNode}) => {
     },
     onError: () => toast.error("Ocorreu um erro ao adicionar essa despesa"),
   })
-  
+
   const { mutateAsync: deleteExpenseFn } = useMutation({
     mutationFn: deleteExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expensesList"] })
       queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
-      toast.success("Despesa deletada com sucesso!")
+      toast.success("Despesa deletada com sucesso.")
     },
     onError: () => toast.error("Ocorreu um erro ao deletar essa despesa"),
   })
 
+  const { mutateAsync: editExpenseFn } = useMutation({
+    mutationFn: editExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
+      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
+      toast.success("Despesa editada com sucesso.")
+    },
+  })
+
   const handleSetFilter = (value: string | undefined) => {
-    if(value === "all"){
+    if (value === "all") {
       setFilter(undefined)
-    }else{
+    } else {
       setFilter(value)
     }
   }
 
-  const addNewExpense = ({ data, date }: addNewExpenseType) => {
+  const formatExpense = ({ data, date }: FormatExpenseType) => {
     const formatedCategory = Number(data.category)
     let formatedDate: Timestamp | undefined = undefined
 
@@ -62,24 +85,27 @@ export const ExpenseProvider = ({children}:{children: React.ReactNode}) => {
       category: formatedCategory,
     }
 
-    addExpenseFn(newExpense)
+    return newExpense
   }
 
   const value = {
     expensesList,
-    addNewExpense,
+    addExpenseFn,
+    editExpenseFn,
     deleteExpenseFn,
+    formatExpense,
     handleSetFilter,
     filter,
     isOpen,
     setIsOpen,
   }
 
-  return <ExpenseContext.Provider value={value}>{children}</ExpenseContext.Provider>
+  return (
+    <ExpenseContext.Provider value={value}>{children}</ExpenseContext.Provider>
+  )
 }
-
 
 export const useExpenseProvider = () => {
   const context = useContext(ExpenseContext)
-  return {...context} 
+  return { ...context }
 }

@@ -1,5 +1,4 @@
 "use client"
-import * as React from "react"
 import { ChevronDownIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -9,14 +8,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useState } from "react"
 
 type ExepenseDateProps = {
   date: Date | undefined
   setDate: (date: Date | undefined) => void
 }
 
-export function ExpenseDate({date, setDate}: ExepenseDateProps) {
-  const [open, setOpen] = React.useState(false)
+export function ExpenseDate({ date, setDate }: ExepenseDateProps) {
+  const [open, setOpen] = useState(false)
 
   return (
     <div className="flex flex-col gap-3">
