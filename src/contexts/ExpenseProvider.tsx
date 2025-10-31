@@ -1,4 +1,5 @@
 import {
+  EditExpenseType,
   ExpenseContextType,
   ExpenseType,
   FormatExpenseType,
@@ -54,12 +55,14 @@ export const ExpenseProvider = ({
   })
 
   const { mutateAsync: editExpenseFn } = useMutation({
-    mutationFn: editExpense,
+    mutationFn: (params: EditExpenseType) =>
+      editExpense(params.id, params.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expensesList"] })
       queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
       toast.success("Despesa editada com sucesso.")
     },
+    onError: () => toast.error("Ocorreu um erro ao editar essa despesa"),
   })
 
   const handleSetFilter = (value: string | undefined) => {
@@ -70,7 +73,10 @@ export const ExpenseProvider = ({
     }
   }
 
-  const formatExpense = ({ data, date }: FormatExpenseType) => {
+  const formatExpense = ({
+    data,
+    date,
+  }: FormatExpenseType): Omit<ExpenseType, "id"> => {
     const formatedCategory = Number(data.category)
     let formatedDate: Timestamp | undefined = undefined
 

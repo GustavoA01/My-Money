@@ -2,7 +2,7 @@
 import { useExpenseProvider } from "@/contexts/ExpenseProvider"
 import { ExpenseCard } from "../components/ExpenseCard"
 import { format } from "date-fns"
-import { categories } from "@/data/types"
+import { categoriesLabel } from "@/data/constants"
 
 export const CardsList = () => {
   const { expensesList } = useExpenseProvider()
@@ -14,7 +14,7 @@ export const CardsList = () => {
           {expensesList.map(expense => {
             let date: string | undefined = ""
             if(expense.date) date = format(expense.date.toDate(), "dd/MM/yyyy")
-            const category = categories[expense.category]
+            const category = categoriesLabel[expense.category]
 
             return (
               <ExpenseCard

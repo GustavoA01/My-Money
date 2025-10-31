@@ -1,5 +1,15 @@
 import { ChartConfig } from "@/components/ui/chart";
 
+export const categoriesLabel = [
+  "Alimentação",
+  "Transporte",
+  "Lazer",
+  "Conta",
+  "Saúde",
+  "Compras",
+  "Outro",
+]
+
 export const chartConfig = {
   expense: {
     label: "Gasto",

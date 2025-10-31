@@ -9,27 +9,22 @@ export interface ExpenseType {
   date: Timestamp | undefined
 }
 
-export const categories: Record<number, string> = {
-  0: "Alimentação",
-  1: "Transporte",
-  2: "Lazer",
-  3: "Conta",
-  4: "Saúde",
-  5: "Compras",
-  6: "Outro",
-}
-
 export type FormatExpenseType = {
   data: Omit<FormExpenseType, "date">
   date: Date | undefined
 }
 
+export type EditExpenseType = {
+  id: string
+  data: Omit<ExpenseType, "id">
+}
+
 export type ExpenseContextType = {
   expensesList: ExpenseType[] | undefined
-  addExpenseFn: (data: ExpenseType) => void
-  editExpenseFn: (id: string, data: ExpenseType) => void
+  addExpenseFn: (data: Omit<ExpenseType, "id">) => void
+  editExpenseFn: (params: EditExpenseType) => void
   deleteExpenseFn: (id: string) => void
-  formatExpense: ({ data, date }: FormatExpenseType) => ExpenseType
+  formatExpense: ({ data, date }: FormatExpenseType) => Omit<ExpenseType, "id">
   filter: string | undefined
   handleSetFilter: (value: string | undefined) => void
   isOpen: boolean

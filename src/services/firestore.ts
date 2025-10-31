@@ -58,10 +58,10 @@ export const getExpenseById = async (id: string): Promise<ExpenseType> => {
   return expense
 }
 
-export const editExpense = async (id: string, data: ExpenseType) => {
+export const editExpense = async (id: string, data: Omit<ExpenseType, "id">) => {
   try {
     const docRef = doc(db, collectionName, id)
-    await updateDoc(docRef, data)
+    await updateDoc(docRef, {...data})
   } catch (error) {
     console.error("Ocorreu um erro ao editar a despesa", error)
   }
