@@ -8,7 +8,6 @@ export const FilterByCategory = () => {
   return (
     <SelectCategory
       name="categoryFilter"
-      defaultValue={undefined}
       onValueChange={handleSetFilter}
       value={filter}
     />

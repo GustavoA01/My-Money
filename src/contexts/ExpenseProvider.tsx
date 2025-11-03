@@ -24,12 +24,16 @@ export const ExpenseProvider = ({
 }) => {
   const queryClient = useQueryClient()
   const [filter, setFilter] = useState<string | undefined>(undefined)
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
   const [isOpen, setIsOpen] = useState(false)
 
   const { data: expensesList } = useQuery({
-    queryKey: ["expensesList", filter],
+    queryKey: ["expensesList", filter, searchQuery],
     queryFn: () =>
-      getExpenses(filter !== undefined ? Number(filter) : undefined),
+      getExpenses({
+        categoryFilter: filter ? Number(filter) : undefined,
+        searchQuery
+      }),
   })
 
   const { mutateAsync: addExpenseFn } = useMutation({
@@ -65,25 +69,28 @@ export const ExpenseProvider = ({
     onError: () => toast.error("Ocorreu um erro ao editar essa despesa"),
   })
 
+  const handleSearch = (value: string) => {
+    const query = value !== "" ? value : undefined
+    setSearchQuery(query)
+  }
+
   const handleSetFilter = (value: string | undefined) => {
-    if (value === "all") {
-      setFilter(undefined)
-    } else {
-      setFilter(value)
-    }
+    const filterQuery = value !== "all" ? value : undefined
+    setFilter(filterQuery)
   }
 
   const formatExpense = ({
     data,
     date,
   }: FormatExpenseType): Omit<ExpenseType, "id"> => {
-    const formatedCategory = Number(data.category)
+    const formatedCategory = data.category ? Number(data.category) : 6
     let formatedDate: Timestamp | undefined = undefined
 
+    console.log(date)
     if (date) {
       formatedDate = Timestamp.fromDate(date)
     }
-
+console.log(formatedDate)
     const newExpense: Omit<ExpenseType, "id"> = {
       description: data.description,
       value: data.value,
@@ -100,6 +107,8 @@ export const ExpenseProvider = ({
     editExpenseFn,
     deleteExpenseFn,
     formatExpense,
+    handleSearch,
+    setSearchQuery,
     handleSetFilter,
     filter,
     isOpen,

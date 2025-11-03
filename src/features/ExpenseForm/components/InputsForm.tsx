@@ -24,9 +24,10 @@ export const InputsForm = () => {
       <Input
         className="mt-1"
         type="number"
+        step="0.01"
         placeholder="Ex: 100"
         {...register("value", {
-          setValueAs: (value: string) => parseFloat(value),
+          setValueAs: (value: string) => (value === "" ? 0 : parseFloat(value)),
         })}
       />
       <ErrorMessage message={errors?.value?.message} />

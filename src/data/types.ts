@@ -25,6 +25,7 @@ export type ExpenseContextType = {
   editExpenseFn: (params: EditExpenseType) => void
   deleteExpenseFn: (id: string) => void
   formatExpense: ({ data, date }: FormatExpenseType) => Omit<ExpenseType, "id">
+  handleSearch: (searchQuery: string) => void
   filter: string | undefined
   handleSetFilter: (value: string | undefined) => void
   isOpen: boolean

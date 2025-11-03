@@ -14,6 +14,7 @@ export const ControllerCategory = () => {
           name={name}
           onValueChange={onChange}
           value={value}
+          defaultValue="6"
         />
       )}
     />

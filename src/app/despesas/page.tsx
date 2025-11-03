@@ -1,14 +1,16 @@
 import { PieChartComponent } from "@/components/PieChart"
-import { AddButton } from "@/features/ExpenseForm/container/AddButton"
 import { CardsList } from "@/features/Card/container/CardsList"
 import { FilterByCategory } from "@/components/FilterByCategory"
+import { AddButton } from "@/components/AddButton"
+import { SearchInput } from "@/components/SearchInput"
 
-export default async function Page() {
+const Page = () => {
   return (
     <div>
       <h1 className="text-3xl mb-4 font-montserrat">Minhas Despesas</h1>
       <PieChartComponent />
       <div className="my-4 w-full flex justify-end gap-4">
+        <SearchInput />
         <FilterByCategory />
         <AddButton />
       </div>
@@ -18,3 +20,5 @@ export default async function Page() {
     </div>
   )
 }
+
+export default Page

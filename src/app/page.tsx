@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { AddExpenseModal } from "../features/ExpenseForm/container/ExpenseFormModal"
+import { ExpenseFormModal } from "../features/ExpenseForm/container/ExpenseFormModal"
 import { SimpleCardsList } from "@/features/Card/container/SimpleCardsList"
 
-export default function Home() {
+ const Home = () => {
   return (
     <div>
       <div className="mb-4">
@@ -15,7 +15,7 @@ export default function Home() {
           </DialogTrigger>
 
           <DialogContent>
-            <AddExpenseModal />
+            <ExpenseFormModal />
           </DialogContent>
         </Dialog>
       </div>
@@ -23,3 +23,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home

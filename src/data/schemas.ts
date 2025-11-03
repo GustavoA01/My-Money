@@ -1,8 +1,8 @@
 import z from "zod"
 
 export const ExpenseSchema = z.object({
-  description: z.string().min(1, { message: "A descrição é obrigatória" }),
-  value: z.number().min(1, {message: "O valor é obrigatório"}),
+  description: z.string().min(0.1, { message: "A descrição é obrigatória" }),
+  value: z.coerce.number().min(1,{message: "O valor é obrigatório"}),
   category: z.string(),
 })
 

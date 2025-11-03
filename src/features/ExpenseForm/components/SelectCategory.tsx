@@ -9,17 +9,18 @@ import {
 } from "@/components/ui/select"
 import { categoriesLabel } from "@/data/constants"
 
-type SelectProps = {
+type SelectCAProps = {
   name: string
   value: string | undefined
   onValueChange: (value: string) => void
+  defaultValue?: string
 }
 
-export const SelectCategory = ({ name, value, onValueChange }: SelectProps) => (
-  <Select name={name} value={value} onValueChange={onValueChange}>
+export const SelectCategory = ({ name, value, onValueChange, defaultValue }: SelectCAProps) => (
+  <Select name={name} value={value} onValueChange={onValueChange} >
     <SelectTrigger>
       <SelectValue
-        placeholder={value === "6" ? "Outro" : "Selecione uma categoria"}
+        placeholder={defaultValue === "6" ? "Outro" : "Selecione uma categoria"}
       />
     </SelectTrigger>
     <SelectContent>
@@ -30,7 +31,7 @@ export const SelectCategory = ({ name, value, onValueChange }: SelectProps) => (
             {category}
           </SelectItem>
         ))}
-        {value !== "6" && <SelectItem value={"all"}>Todas</SelectItem>}
+        {defaultValue !== "6" && <SelectItem value={"all"}>Todas</SelectItem>}
       </SelectGroup>
     </SelectContent>
   </Select>

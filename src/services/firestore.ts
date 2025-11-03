@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   QueryConstraint,
   updateDoc,
@@ -25,17 +26,31 @@ export const addExpense = async (data: Omit<ExpenseType, "id">) => {
 }
 
 export const getExpenses = async (
-  filter: number | undefined
+  queryOptions: {
+    categoryFilter?: number | undefined
+    searchQuery?: string | undefined
+    maxLimit?: number
+  } = {}
 ): Promise<ExpenseType[]> => {
+  const { categoryFilter, searchQuery, maxLimit } = queryOptions
   const queryConstraints: QueryConstraint[] = []
 
-  if (filter !== undefined) {
-    queryConstraints.push(where("category", "==", filter))
+  if (categoryFilter !== undefined) {
+    queryConstraints.push(where("category", "==", categoryFilter))
   }
 
-  const categoryQuery = query(listCollectionRef, ...queryConstraints)
+  if (searchQuery) {
+    queryConstraints.push(where("description", ">=", searchQuery))
+    queryConstraints.push(where("description", "<=", searchQuery + "\uf8ff"))
+  }
 
-  const docs = await getDocs(categoryQuery)
+  if (maxLimit) {
+    queryConstraints.push(limit(maxLimit))
+  }
+
+  const queries = query(listCollectionRef, ...queryConstraints)
+
+  const docs = await getDocs(queries)
   const expenses = docs.docs.map((doc) => {
     return {
       ...doc.data(),
@@ -58,10 +73,13 @@ export const getExpenseById = async (id: string): Promise<ExpenseType> => {
   return expense
 }
 
-export const editExpense = async (id: string, data: Omit<ExpenseType, "id">) => {
+export const editExpense = async (
+  id: string,
+  data: Omit<ExpenseType, "id">
+) => {
   try {
     const docRef = doc(db, collectionName, id)
-    await updateDoc(docRef, {...data})
+    await updateDoc(docRef, { ...data })
   } catch (error) {
     console.error("Ocorreu um erro ao editar a despesa", error)
   }

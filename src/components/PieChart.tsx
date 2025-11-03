@@ -18,21 +18,26 @@ export const description = "A pie chart with a legend"
 
 export function PieChartComponent() {
   const {expensesList} = useExpenseProvider()
+  const totalValues = []
 
-  // const totalAlimentacao = expensesList?.reduce((acc, expense)=> {
-  //   if(expense.category === 1){
-  //     return acc + expense.value
-  //   }
-  // }, 0)
-  
+  for (let i = 0; i < 7; i++) {
+    const total = expensesList?.reduce((acc, expense) => {
+      if (expense.category === i) {
+        return acc + expense.value
+      }
+      return acc
+    }, 0)
+    totalValues.push(total)
+  }
+
   const chartData = [
-    { category: "alimentacao", expense: 450, fill: "var(--color-alimentacao)" },
-    { category: "transporte", expense: 200, fill: "var(--color-transporte)" },
-    { category: "lazer", expense: 300, fill: "var(--color-lazer)" },
-    { category: "contas", expense: 250, fill: "var(--color-contas)" },
-    { category: "saude", expense: 180, fill: "var(--color-saude)" },
-    { category: "compras", expense: 220, fill: "var(--color-compras)" },
-    { category: "outro", expense: 150, fill: "var(--color-outro)" },
+    { category: "alimentacao", expense: totalValues[0], fill: "var(--color-alimentacao)" },
+    { category: "transporte", expense: totalValues[1], fill: "var(--color-transporte)" },
+    { category: "lazer", expense: totalValues[2], fill: "var(--color-lazer)" },
+    { category: "contas", expense: totalValues[3], fill: "var(--color-contas)" },
+    { category: "saude", expense: totalValues[4], fill: "var(--color-saude)" },
+    { category: "compras", expense: totalValues[5], fill: "var(--color-compras)" },
+    { category: "outro", expense: totalValues[6], fill: "var(--color-outro)" },
   ]
 
   return (
