@@ -11,9 +11,6 @@ export const categoriesLabel = [
 ]
 
 export const chartConfig = {
-  expense: {
-    label: "Gasto",
-  },
   alimentacao: {
     label: "Alimentação",
     color: "#89CFF0",

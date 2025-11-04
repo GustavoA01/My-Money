@@ -11,8 +11,8 @@ import {
 import { useState } from "react"
 
 type ExepenseDateProps = {
-  date: Date | undefined
-  setDate: (date: Date | undefined) => void
+  date: Date | null
+  setDate: (date: Date | null) => void
 }
 
 export function ExpenseDate({ date, setDate }: ExepenseDateProps) {
@@ -37,10 +37,10 @@ export function ExpenseDate({ date, setDate }: ExepenseDateProps) {
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
             mode="single"
-            selected={date}
+            selected={date ?? undefined}
             captionLayout="dropdown"
             onSelect={(date) => {
-              setDate(date)
+              setDate(date || null)
               setOpen(false)
             }}
           />

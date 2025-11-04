@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { ExpenseFormModal } from "../features/ExpenseForm/container/ExpenseFormModal"
 import { SimpleCardsList } from "@/features/Card/container/SimpleCardsList"
+import { PieChartComponent } from "@/components/PieChart"
 
- const Home = () => {
+const Home = () => {
   return (
     <div>
       <div className="mb-4">
@@ -19,7 +20,12 @@ import { SimpleCardsList } from "@/features/Card/container/SimpleCardsList"
           </DialogContent>
         </Dialog>
       </div>
-      <SimpleCardsList />
+      <div className="flex gap-4">
+        <div className="w-full">
+          <PieChartComponent />
+        </div>
+        <SimpleCardsList />
+      </div>
     </div>
   )
 }

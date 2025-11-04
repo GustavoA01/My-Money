@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   QueryConstraint,
   updateDoc,
@@ -30,9 +31,10 @@ export const getExpenses = async (
     categoryFilter?: number | undefined
     searchQuery?: string | undefined
     maxLimit?: number
+    orderByFilter?: string | undefined
   } = {}
 ): Promise<ExpenseType[]> => {
-  const { categoryFilter, searchQuery, maxLimit } = queryOptions
+  const { categoryFilter, searchQuery, maxLimit, orderByFilter } = queryOptions
   const queryConstraints: QueryConstraint[] = []
 
   if (categoryFilter !== undefined) {
@@ -46,6 +48,24 @@ export const getExpenses = async (
 
   if (maxLimit) {
     queryConstraints.push(limit(maxLimit))
+  }
+
+  
+  if(orderByFilter){
+    switch(orderByFilter){
+      case "recent":
+        queryConstraints.push(orderBy("date", "desc"))
+        break;
+      case "old":
+        queryConstraints.push(orderBy("date", "asc"))
+        break;
+      case "high":
+        queryConstraints.push(orderBy("value", "desc"))
+        break;
+      case "low":
+        queryConstraints.push(orderBy("value", "asc"))
+        break;
+    }
   }
 
   const queries = query(listCollectionRef, ...queryConstraints)

@@ -6,12 +6,12 @@ export interface ExpenseType {
   description: string
   value: number
   category: number
-  date: Timestamp | undefined
+  date: Timestamp | null
 }
 
 export type FormatExpenseType = {
   data: Omit<FormExpenseType, "date">
-  date: Date | undefined
+  date: Date | null
 }
 
 export type EditExpenseType = {
@@ -26,6 +26,8 @@ export type ExpenseContextType = {
   deleteExpenseFn: (id: string) => void
   formatExpense: ({ data, date }: FormatExpenseType) => Omit<ExpenseType, "id">
   handleSearch: (searchQuery: string) => void
+  orderByFilter: string | undefined
+  setOrderByFilter: React.Dispatch<React.SetStateAction<string | undefined>>
   filter: string | undefined
   handleSetFilter: (value: string | undefined) => void
   isOpen: boolean

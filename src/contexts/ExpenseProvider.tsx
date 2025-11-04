@@ -24,15 +24,17 @@ export const ExpenseProvider = ({
 }) => {
   const queryClient = useQueryClient()
   const [filter, setFilter] = useState<string | undefined>(undefined)
+  const [orderByFilter, setOrderByFilter] = useState<string | undefined>(undefined)
   const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
   const [isOpen, setIsOpen] = useState(false)
 
   const { data: expensesList } = useQuery({
-    queryKey: ["expensesList", filter, searchQuery],
+    queryKey: ["expensesList", filter, searchQuery, orderByFilter],
     queryFn: () =>
       getExpenses({
         categoryFilter: filter ? Number(filter) : undefined,
-        searchQuery
+        searchQuery,
+        orderByFilter
       }),
   })
 
@@ -84,7 +86,7 @@ export const ExpenseProvider = ({
     date,
   }: FormatExpenseType): Omit<ExpenseType, "id"> => {
     const formatedCategory = data.category ? Number(data.category) : 6
-    let formatedDate: Timestamp | undefined = undefined
+    let formatedDate: Timestamp | null = null
 
     console.log(date)
     if (date) {
@@ -108,7 +110,8 @@ console.log(formatedDate)
     deleteExpenseFn,
     formatExpense,
     handleSearch,
-    setSearchQuery,
+    orderByFilter,
+    setOrderByFilter,
     handleSetFilter,
     filter,
     isOpen,

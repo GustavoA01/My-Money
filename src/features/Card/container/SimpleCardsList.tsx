@@ -8,7 +8,7 @@ export const SimpleCardsList = () => {
   return (
     <>
       {recentExpenses !== undefined && recentExpenses.length > 0 ? (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 ml-auto">
           {recentExpenses.map((expense) => (
             <SimpleCard
               key={expense.id}

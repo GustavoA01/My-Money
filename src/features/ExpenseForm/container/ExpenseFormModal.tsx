@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query"
 export const ExpenseFormModal = ({ id }: { id?: string }) => {
   const isEditing = !!id
   const { formatExpense, addExpenseFn, editExpenseFn } = useExpenseProvider()
-  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [date, setDate] = useState<Date | null>(null)
 
   const methods = useForm<FormExpenseType>({
     resolver: zodResolver(ExpenseSchema),

@@ -7,8 +7,8 @@ import { FormExpenseType } from "@/data/schemas"
 
 type FormProps = {
   onSubmit: (data: Omit<FormExpenseType, "date">) => void
-  date: Date | undefined
-  setDate: (date: Date | undefined) => void
+  date: Date | null
+  setDate: (date: Date | null) => void
 }
 
 export const ExpenseForm = ({ onSubmit, date, setDate }: FormProps) => {
