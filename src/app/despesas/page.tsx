@@ -15,7 +15,7 @@ const Page = () => {
         <FilterByCategory />
         <AddButton />
       </div>
-      <div className="flex gap-2 flex-wrap">
+      <div className="space-y-2 space-x-2 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <CardsList />
       </div>
     </div>

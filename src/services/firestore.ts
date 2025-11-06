@@ -29,28 +29,21 @@ export const addExpense = async (data: Omit<ExpenseType, "id">) => {
 export const getExpenses = async (
   queryOptions: {
     categoryFilter?: number | undefined
-    searchQuery?: string | undefined
     maxLimit?: number
     orderByFilter?: string | undefined
   } = {}
 ): Promise<ExpenseType[]> => {
-  const { categoryFilter, searchQuery, maxLimit, orderByFilter } = queryOptions
+  const { categoryFilter, maxLimit, orderByFilter } = queryOptions
   const queryConstraints: QueryConstraint[] = []
 
   if (categoryFilter !== undefined) {
     queryConstraints.push(where("category", "==", categoryFilter))
   }
 
-  if (searchQuery) {
-    queryConstraints.push(where("description", ">=", searchQuery))
-    queryConstraints.push(where("description", "<=", searchQuery + "\uf8ff"))
-  }
-
   if (maxLimit) {
     queryConstraints.push(limit(maxLimit))
   }
 
-  
   if(orderByFilter){
     switch(orderByFilter){
       case "recent":

@@ -12,7 +12,7 @@ import {
 } from "@/services/firestore"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Timestamp } from "firebase/firestore"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useMemo, useState } from "react"
 import { toast } from "sonner"
 
 const ExpenseContext = createContext({} as ExpenseContextType)
@@ -24,18 +24,25 @@ export const ExpenseProvider = ({
 }) => {
   const queryClient = useQueryClient()
   const [filter, setFilter] = useState<string | undefined>(undefined)
-  const [orderByFilter, setOrderByFilter] = useState<string | undefined>(undefined)
-  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
+  const [orderByFilter, setOrderByFilter] = useState<string | undefined>(
+    undefined
+  )
+  const [searchQuery, setSearchQuery] = useState<string | undefined>("")
   const [isOpen, setIsOpen] = useState(false)
 
   const { data: expensesList } = useQuery({
     queryKey: ["expensesList", filter, searchQuery, orderByFilter],
-    queryFn: () =>
-      getExpenses({
-        categoryFilter: filter ? Number(filter) : undefined,
-        searchQuery,
-        orderByFilter
-      }),
+    queryFn: async () => {
+      try {
+        return await getExpenses({
+          categoryFilter: filter ? Number(filter) : undefined,
+          orderByFilter,
+        });
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    },
   })
 
   const { mutateAsync: addExpenseFn } = useMutation({
@@ -72,8 +79,7 @@ export const ExpenseProvider = ({
   })
 
   const handleSearch = (value: string) => {
-    const query = value !== "" ? value : undefined
-    setSearchQuery(query)
+    setSearchQuery(value)
   }
 
   const handleSetFilter = (value: string | undefined) => {
@@ -88,11 +94,10 @@ export const ExpenseProvider = ({
     const formatedCategory = data.category ? Number(data.category) : 6
     let formatedDate: Timestamp | null = null
 
-    console.log(date)
     if (date) {
       formatedDate = Timestamp.fromDate(date)
     }
-console.log(formatedDate)
+
     const newExpense: Omit<ExpenseType, "id"> = {
       description: data.description,
       value: data.value,
@@ -103,8 +108,18 @@ console.log(formatedDate)
     return newExpense
   }
 
+  const filteredList = useMemo(() => {
+    if (searchQuery) {
+      return expensesList?.filter((expense) =>
+        expense.description
+          .toLocaleLowerCase()
+          .includes(searchQuery.toLocaleLowerCase())
+      )
+    }
+  }, [searchQuery, expensesList])
+
   const value = {
-    expensesList,
+    expensesList: searchQuery !== "" ? filteredList : expensesList,
     addExpenseFn,
     editExpenseFn,
     deleteExpenseFn,
