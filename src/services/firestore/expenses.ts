@@ -12,7 +12,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore"
-import { db } from "./firebaseConfig"
+import { db } from "../firebaseConfig"
 import { ExpenseType } from "@/data/types"
 
 const collectionName = "expensesList"

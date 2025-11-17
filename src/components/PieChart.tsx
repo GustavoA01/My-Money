@@ -7,22 +7,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartContainer,
-  ChartLegend,
-} from "@/components/ui/chart"
+import { ChartContainer, ChartLegend } from "@/components/ui/chart"
 import { chartConfig } from "@/data/constants"
 import { useExpenseProvider } from "@/contexts/ExpenseProvider"
+import { endOfMonth, format } from "date-fns"
 
 export const description = "A pie chart with a legend"
 
 export function PieChartComponent() {
-  const {expensesList} = useExpenseProvider()
+  const { expensesList } = useExpenseProvider()
   const totalValues = []
+  const currentMonth = new Date().getMonth()
+  const longMonth = new Date().toLocaleString("pt-BR", { month: "long" })
 
   for (let i = 0; i < 7; i++) {
     const total = expensesList?.reduce((acc, expense) => {
-      if (expense.category === i) {
+      const expenseMonth = expense.date?.toDate().getMonth()
+      if (expense.category === i && expenseMonth === currentMonth) {
         return acc + expense.value
       }
       return acc
@@ -31,12 +32,28 @@ export function PieChartComponent() {
   }
 
   const chartData = [
-    { category: "alimentacao", expense: totalValues[0], fill: "var(--color-alimentacao)" },
-    { category: "transporte", expense: totalValues[1], fill: "var(--color-transporte)" },
+    {
+      category: "alimentacao",
+      expense: totalValues[0],
+      fill: "var(--color-alimentacao)",
+    },
+    {
+      category: "transporte",
+      expense: totalValues[1],
+      fill: "var(--color-transporte)",
+    },
     { category: "lazer", expense: totalValues[2], fill: "var(--color-lazer)" },
-    { category: "contas", expense: totalValues[3], fill: "var(--color-contas)" },
+    {
+      category: "contas",
+      expense: totalValues[3],
+      fill: "var(--color-contas)",
+    },
     { category: "saude", expense: totalValues[4], fill: "var(--color-saude)" },
-    { category: "compras", expense: totalValues[5], fill: "var(--color-compras)" },
+    {
+      category: "compras",
+      expense: totalValues[5],
+      fill: "var(--color-compras)",
+    },
     { category: "outro", expense: totalValues[6], fill: "var(--color-outro)" },
   ]
 
@@ -44,7 +61,10 @@ export function PieChartComponent() {
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Gastos no mês</CardTitle>
-        <CardDescription>1 de Janeiro - 31 de Janeiro</CardDescription>
+        <CardDescription>
+          1 de {longMonth} - {format(endOfMonth(new Date()), "d")} de{" "}
+          {longMonth}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer

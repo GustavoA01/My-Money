@@ -17,7 +17,7 @@ export const ExpenseForm = ({ onSubmit, date, setDate }: FormProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <InputsForm />
-      <ExpenseDate date={date} setDate={setDate} />
+      <ExpenseDate date={date} setDate={setDate} label="Data da despesa" />
       <ControllerCategory/>
       <FormFooter />
     </form>

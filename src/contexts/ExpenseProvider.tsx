@@ -9,7 +9,7 @@ import {
   deleteExpense,
   editExpense,
   getExpenses,
-} from "@/services/firestore"
+} from "@/services/firestore/expenses"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Timestamp } from "firebase/firestore"
 import { createContext, useContext, useMemo, useState } from "react"
@@ -27,20 +27,21 @@ export const ExpenseProvider = ({
   const [orderByFilter, setOrderByFilter] = useState<string | undefined>(
     undefined
   )
-  const [searchQuery, setSearchQuery] = useState<string | undefined>("")
+  const [searchQuery, setSearchQuery] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
+  const queryKey = ["expensesList", filter, searchQuery, orderByFilter]
 
   const { data: expensesList } = useQuery({
-    queryKey: ["expensesList", filter, searchQuery, orderByFilter],
+    queryKey: queryKey,
     queryFn: async () => {
       try {
         return await getExpenses({
           categoryFilter: filter ? Number(filter) : undefined,
           orderByFilter,
-        });
+        })
       } catch (error) {
-        console.error(error);
-        return [];
+        console.error(error)
+        return []
       }
     },
   })
@@ -59,23 +60,77 @@ export const ExpenseProvider = ({
 
   const { mutateAsync: deleteExpenseFn } = useMutation({
     mutationFn: deleteExpense,
+    onMutate: (idToDelete) => {
+      const previousExpense = queryClient.getQueryData<ExpenseType[]>(queryKey)
+
+      queryClient.setQueryData<ExpenseType[]>(queryKey, (oldData) =>
+        oldData ? oldData.filter((exp) => exp.id !== idToDelete) : []
+      )
+
+      return { previousExpense, queryKey }
+    },
+
+    onError(error, _, context) {
+      if (context?.previousExpense) {
+        queryClient.setQueryData<ExpenseType[]>(
+          context.queryKey,
+          context.previousExpense
+        )
+      }
+      toast.error("Ocorreu um erro ao deletar essa despesa")
+      console.log(error)
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
-      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
       toast.success("Despesa deletada com sucesso.")
     },
-    onError: () => toast.error("Ocorreu um erro ao deletar essa despesa"),
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
+      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
+    },
   })
 
   const { mutateAsync: editExpenseFn } = useMutation({
     mutationFn: (params: EditExpenseType) =>
       editExpense(params.id, params.data),
+    onMutate: ({ id: idToEdit, data }) => {
+      const previousExpense = queryClient.getQueryData<ExpenseType[]>(queryKey)
+
+      queryClient.setQueryData<ExpenseType[]>(queryKey, (oldData) => {
+        if (!oldData) return []
+
+        return oldData.map((expense) => {
+          if (idToEdit === expense.id) {
+            return {
+              ...expense,
+              id: idToEdit,
+              ...data,
+            }
+          }
+          return expense
+        })
+      })
+
+      return { previousExpense }
+    },
+
+    onError(error, _, context) {
+      if (context?.previousExpense) {
+        queryClient.setQueryData(queryKey, context.previousExpense)
+      }
+      toast.error("Ocorreu um erro ao editar essa despesa")
+      console.log(error)
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
-      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
       toast.success("Despesa editada com sucesso.")
     },
-    onError: () => toast.error("Ocorreu um erro ao editar essa despesa"),
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["expensesList"] })
+      queryClient.invalidateQueries({ queryKey: ["recentExpenses"] })
+    },
   })
 
   const handleSearch = (value: string) => {
@@ -109,13 +164,12 @@ export const ExpenseProvider = ({
   }
 
   const filteredList = useMemo(() => {
-    if (searchQuery) {
       return expensesList?.filter((expense) =>
         expense.description
           .toLocaleLowerCase()
           .includes(searchQuery.toLocaleLowerCase())
       )
-    }
+    
   }, [searchQuery, expensesList])
 
   const value = {

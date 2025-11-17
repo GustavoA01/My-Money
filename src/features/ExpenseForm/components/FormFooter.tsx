@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { DialogClose, DialogFooter } from "@/components/ui/dialog"
 
 export const FormFooter = () => (
-  <DialogFooter className="flex justify-between">
+  <DialogFooter>
     <DialogClose asChild>
       <Button variant="outline">Cancelar</Button>
     </DialogClose>

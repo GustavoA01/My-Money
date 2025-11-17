@@ -26,12 +26,12 @@ export const SelectCategory = ({ name, value, onValueChange, defaultValue }: Sel
     <SelectContent>
       <SelectGroup>
         <SelectLabel>Categorias</SelectLabel>
+        {defaultValue !== "6" && <SelectItem value={"all"}>Todas</SelectItem>}
         {categoriesLabel.map((category, index) => (
           <SelectItem key={category} value={String(index)}>
             {category}
           </SelectItem>
         ))}
-        {defaultValue !== "6" && <SelectItem value={"all"}>Todas</SelectItem>}
       </SelectGroup>
     </SelectContent>
   </Select>

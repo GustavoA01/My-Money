@@ -1,13 +1,16 @@
-import { FormExpenseType } from "@/data/schemas"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, Path, useFormContext } from "react-hook-form"
 import { SelectCategory } from "./SelectCategory"
 
-export const ControllerCategory = () => {
-  const { control } = useFormContext<FormExpenseType>()
+type minimumType = {
+  category: string
+}
+
+export const ControllerCategory = <T extends minimumType>() => {
+  const { control } = useFormContext<T>()
   
   return (
     <Controller
-      name="category"
+      name={"category" as Path<T> }
       control={control}
       render={({ field: { name, onChange, value } }) => (
         <SelectCategory

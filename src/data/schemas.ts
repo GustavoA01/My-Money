@@ -7,3 +7,12 @@ export const ExpenseSchema = z.object({
 })
 
 export type FormExpenseType = z.infer<typeof ExpenseSchema>
+
+export const GoalSchema = z.object({
+  goalName: z.string().min(0.1, { message: "O nome da descrição é obrigatório" }),
+  goalMaxValue: z.number({error: "O valor deve ser um número"})
+                  .min(50, { message: "O valor máximo deve ser maior que cinquenta" }),
+  category: z.string(),
+})
+
+export type FormGoalType = z.infer<typeof GoalSchema>

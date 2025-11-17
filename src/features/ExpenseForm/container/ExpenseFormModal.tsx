@@ -6,7 +6,7 @@ import { FormExpenseType, ExpenseSchema } from "@/data/schemas"
 import { useEffect, useState } from "react"
 import { useExpenseProvider } from "@/contexts/ExpenseProvider"
 import { ExpenseForm } from "./ExpenseForm"
-import { getExpenseById } from "@/services/firestore"
+import { getExpenseById } from "@/services/firestore/expenses"
 import { useQuery } from "@tanstack/react-query"
 
 export const ExpenseFormModal = ({ id }: { id?: string }) => {
@@ -23,6 +23,7 @@ export const ExpenseFormModal = ({ id }: { id?: string }) => {
     },
   })
   const { reset } = methods
+
   const { data: expenseToEdit } = useQuery({
     queryKey: ["expenseToEdit", id],
     queryFn: () => getExpenseById(id ?? ""),

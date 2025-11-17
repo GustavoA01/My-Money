@@ -13,15 +13,16 @@ import { useState } from "react"
 type ExepenseDateProps = {
   date: Date | null
   setDate: (date: Date | null) => void
+  label: string
 }
 
-export function ExpenseDate({ date, setDate }: ExepenseDateProps) {
+export function ExpenseDate({ date, setDate, label }: ExepenseDateProps) {
   const [open, setOpen] = useState(false)
 
   return (
     <div className="flex flex-col gap-3">
       <Label htmlFor="date" className="px-1">
-        Data da despesa
+        {label}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

@@ -9,6 +9,14 @@ export interface ExpenseType {
   date: Timestamp | null
 }
 
+export interface GoalType {
+  id: string
+  goalName: string
+  goalMaxValue: number
+  category: number
+  dateLimit: Timestamp 
+}
+
 export type FormatExpenseType = {
   data: Omit<FormExpenseType, "date">
   date: Date | null

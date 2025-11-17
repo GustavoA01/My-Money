@@ -20,7 +20,7 @@ export const MenuActions = ({ id }: { id: string }) => {
       <DropdownMenu>
         <DropdownMenuTrigger className="hover:bg-gray-800 p-1 transition duration-150 ease-in-out rounded">
           <MoreVertical />
-        </DropdownMenuTrigger>
+        </DropdownMenuTrigger>  
         <DropdownMenuContent align="end">
           <DropdownMenuGroup className="space-y-1">
             <DropdownMenuItem onClick={() => setIsEditOpen(true)}>

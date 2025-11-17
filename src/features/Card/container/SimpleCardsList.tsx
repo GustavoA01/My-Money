@@ -1,12 +1,14 @@
-'use client'
+"use client"
 import { SimpleCard } from "../components/SimpleCard"
 import { useRecentsExpenses } from "@/hooks/useRecentExpenses"
+import { SimpleCardsSkeleton } from "../components/SimpleCardsSkeleton"
 
 export const SimpleCardsList = () => {
   const { recentExpenses } = useRecentsExpenses()
 
   return (
     <>
+    <SimpleCardsSkeleton />
       {recentExpenses !== undefined && recentExpenses.length > 0 ? (
         <div className="flex flex-col gap-3">
           {recentExpenses.map((expense) => (
@@ -18,7 +20,7 @@ export const SimpleCardsList = () => {
             />
           ))}
         </div>
-      ) : (
+      ) : recentExpenses?.length === 0 && (
         <div>Nenhuma despesa cadastrada</div>
       )}
     </>
